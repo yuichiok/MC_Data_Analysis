@@ -3,11 +3,11 @@
 #include <iostream>
 #include <stdlib.h>
 
-void CountEvents(){
+void CountEvents_MC(){
     
     Int_t totalSize = 0;
     
-    TFile *f = TFile::Open("MC_SUMMER2016_PRIMARY_DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-Py8__RunIISummer16MAv2-PUMoriond17_80r2as_2016_TrancheIV_v6_ext1-v2_01of18.root");
+    TFile *f = TFile::Open("../datasets/MC_SUMMER2016_PRIMARY_DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-Py8__RunIISummer16MAv2-PUMoriond17_80r2as_2016_TrancheIV_v6_ext1-v2_01of18.root");
     if (f == 0) {
         // if we cannot open the file, print an error message and return immediatly
         std::cout << "error: MC_SUMMER2016_PRIMARY_DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-Py8__RunIISummer16MAv2-PUMoriond17_80r2as_2016_TrancheIV_v6_ext1-v2_01of18.root cannot be extracted." << std::endl;

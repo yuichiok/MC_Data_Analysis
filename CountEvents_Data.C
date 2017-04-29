@@ -7,7 +7,7 @@ void CountEvents_Data(){
     
     Int_t totalSize = 0;
     
-    TFile *f = TFile::Open("ZC2017_03_RRSEP2016_DOUBLELEP_DoubleMuon__Run2016G-23Sep2016-v1_1of5.root");
+    TFile *f = TFile::Open("../datasets/ZC2017_03_RRSEP2016_DOUBLELEP_DoubleMuon__Run2016G-23Sep2016-v1_1of5.root");
     if (f == 0) {
         // if we cannot open the file, print an error message and return immediatly
         std::cout << "error: ZC2017_03_RRSEP2016_DOUBLELEP_DoubleMuon__Run2016G-23Sep2016-v1_1of5.root cannot be extracted." << std::endl;
@@ -81,7 +81,8 @@ void CountEvents_Data(){
     c1->Divide(3,2,0.02,0.02);
     c2->Divide(2,1,0.02,0.02);
     
-    
+    c1->SetLogy();
+	c2->SetLogy();
     
     //create histogram
     THStack *pt  = new THStack("pt","pt distribution of muons");
@@ -169,33 +170,25 @@ void CountEvents_Data(){
     }
     
     c1->cd(1);
-    zboson->SetLogy();
     zboson->Draw("");
     c1->cd(2);
-    nPV->SetLogy();
     nPV->Draw("");
     c1->cd(3);
-    pt->SetLogy();
     pt->Add(MuonPt1);
     pt->Add(MuonPt2);
     pt->Draw("pfc nostack");
     c1->cd(4);
-    eta->SetLogy();
     eta->Add(MuonEta1);
     eta->Add(MuonEta2);
     eta->Draw("pfc nostack");
     c1->cd(5);
-    JetPt->SetLogy();
     JetPt->Draw("");
     c1->cd(6);
-    JetEta->SetLogy();
     JetEta->Draw("");
     
     c2->cd(1);
-    DY->SetLogy();
     DY_Pt->Draw("");
     c2->cd(2);
-    DY->SetLogy();
     DY_Eta->Draw("");
     
     
