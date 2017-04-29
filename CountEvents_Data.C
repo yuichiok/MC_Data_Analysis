@@ -75,23 +75,30 @@ void CountEvents_Data(){
     
     
     
-    TCanvas *c1 = new TCanvas("c1","multipad1",1000,500);
-    TCanvas *c2 = new TCanvas("c2","multipad2",1000,500);
+    TCanvas *c1 = new TCanvas("c1","multipad1",500,500);
+    TCanvas *c2 = new TCanvas("c2","multipad2",500,250);
     gStyle->SetOptStat(1);
-    c1->Divide(3,2,0.02,0.02);
+    c1->Divide(2,2,0.02,0.02);
     c2->Divide(2,1,0.02,0.02);
     
     c1->SetLogy();
-	c2->SetLogy();
+    c2->SetLogy();
     
     //create histogram
-    THStack *pt  = new THStack("pt","pt distribution of muons");
-    THStack *eta = new THStack("eta","#eta distribution of muons");
-    
+    THStack *ptBf           = new THStack("ptbf","pt distribution of muons (before cut)");
+    THStack *etaBf          = new THStack("etabf","#eta distribution of muons (before cut)");
+    THStack *pt             = new THStack("pt","pt distribution of muons");
+    THStack *eta            = new THStack("eta","#eta distribution of muons");
+
+    TH1F *zbosonBf          = new TH1F("zmbf","Z0 invariant mass distribution (before cut)",100,0,300.);
     TH1F *zboson            = new TH1F("zm","Z0 invariant mass distribution",100,0,300.);
     TH1F *nPV               = new TH1F("nPVs","Number of Primary Vertices",50,0,50.);
+    TH1F *MuonPtBf1         = new TH1F("muonPtbf1","pt distribution of muons",100,0,300.);
+    TH1F *MuonEtaBf1        = new TH1F("muonEtabf1","#eta distribution of muons",100,-2.5,2.5);
     TH1F *MuonPt1           = new TH1F("muonPt1","pt distribution of muons",100,0,300.);
     TH1F *MuonEta1          = new TH1F("muonEta1","#eta distribution of muons",100,-2.5,2.5);
+    TH1F *MuonPtBf2         = new TH1F("muonPtbf2","pt distribution of muons",100,0,300.);
+    TH1F *MuonEtaBf2        = new TH1F("muonEtabf2","#eta distribution of muons",100,-2.5,2.5);
     TH1F *MuonPt2           = new TH1F("muonPt2","pt distribution of muons",100,0,300.);
     TH1F *MuonEta2          = new TH1F("muonEta2","#eta distribution of muons",100,-2.5,2.5);
     TH1F *JetPt             = new TH1F("jetPt","pt distribution of jets",100,0,300.);
@@ -119,6 +126,22 @@ void CountEvents_Data(){
             double dif = 0;
             int max = 0;
             
+            dif = m_lep_pt[0] - m_lep_pt[1];
+            
+            
+            zbosonbf->Fill(m_Z_mass);
+            if(dif > 0){
+                MuonPtBf1->Fill(m_lep_pt[0]);
+                MuonPtBf2->Fill(m_lep_pt[1]);
+                MuonEtaBf1->Fill(m_lep_eta[0]);
+                MuonEtaBf2->Fill(m_lep_eta[1]);
+            }else if(dif < 0){
+                MuonPtBf1->Fill(m_lep_pt[1]);
+                MuonPtBf2->Fill(m_lep_pt[0]);
+                MuonEtaBf1->Fill(m_lep_eta[1]);
+                MuonEtaBf2->Fill(m_lep_eta[0]);
+            }
+            
             if( m_Z_mass>70. && m_Z_mass<110. ) Zmass_Check = true;
             if( m_lep_pt[0] > 20 && abs(m_lep_eta[0]) < 2.4 && m_lep_iso[0] < 0.25) Lep0_Check = true;
             if( m_lep_pt[1] > 20 && abs(m_lep_eta[1]) < 2.4 && m_lep_iso[1] < 0.25) Lep1_Check = true;
@@ -126,7 +149,6 @@ void CountEvents_Data(){
             if(Lep0_Check==true && Lep1_Check==true && Zmass_Check==true){
                 
                 zboson->Fill(m_Z_mass);
-                dif = m_lep_pt[0] - m_lep_pt[1];
                 if(dif > 0){
                     MuonPt1->Fill(m_lep_pt[0]);
                     MuonPt2->Fill(m_lep_pt[1]);
@@ -149,7 +171,7 @@ void CountEvents_Data(){
                 }
                 
             }
-        
+            
         }
         
         if(m_Vtype == 0 || m_Vtype == 1)
@@ -170,26 +192,27 @@ void CountEvents_Data(){
     }
     
     c1->cd(1);
-    zboson->Draw("");
+    ptBf->Add(MuonPtBf1);
+    ptBf->Add(MuonPtBf2);
+    ptBf->Draw("pfc nostack");
     c1->cd(2);
-    nPV->Draw("");
-    c1->cd(3);
     pt->Add(MuonPt1);
     pt->Add(MuonPt2);
     pt->Draw("pfc nostack");
+    c1->cd(3);
+    etaBf->Add(MuonEtaBf1);
+    etaBf->Add(MuonEtaBf2);
+    etaBf->Draw("pfc nostack");
     c1->cd(4);
     eta->Add(MuonEta1);
     eta->Add(MuonEta2);
     eta->Draw("pfc nostack");
-    c1->cd(5);
-    JetPt->Draw("");
-    c1->cd(6);
-    JetEta->Draw("");
+   
     
     c2->cd(1);
-    DY_Pt->Draw("");
+    zbosonBf->Draw("");
     c2->cd(2);
-    DY_Eta->Draw("");
+    zboson->Draw("");
     
     
 }
