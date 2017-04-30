@@ -105,8 +105,26 @@ void CountEvents_Data(){
     TH1F *JetEta            = new TH1F("jetEta","#eta distribution of jets",100,-2.5,2.5);
     TH1F *DY_Pt             = new TH1F("DYPt","pt distribution of DY process",100,0,300.);
     TH1F *DY_Eta            = new TH1F("DYEta","#eta distribution of DY process",100,-2.5,2.5);
-    
-    
+   
+    //setting color scheme 
+    MuonPtBf1->SetFillColor(kRed);
+    //MuonPtBf1->SetFillStyle(3012);
+    MuonPtBf2->SetFillColor(kBlue);
+    //MuonPtBf2->SetFillStyle(3012);
+    MuonEtaBf1->SetFillColor(kRed);
+    //MuonEtaBf1->SetFillStyle(4050);
+    MuonEtaBf2->SetFillColor(kBlue);
+    //MuonEtaBf2->SetFillStyle(4050);
+    MuonPt1->SetFillColor(kRed);
+    //MuonPt1->SetFillStyle(4050);
+    MuonPt2->SetFillColor(kBlue);
+    //MuonPt2->SetFillStyle(4050);
+    MuonEta1->SetFillColor(kRed);
+    //MuonEta1->SetFillStyle(4050); 
+    MuonEta2->SetFillColor(kBlue);
+    //MuonEta2->SetFillStyle(4050);
+    zbosonBf->SetFillColor(kRed);
+    zboson->SetFillColor(kBlue);
     
     std::cout << "Total Events: " << nEntry << std::endl;
     
@@ -129,7 +147,7 @@ void CountEvents_Data(){
             dif = m_lep_pt[0] - m_lep_pt[1];
             
             
-            zbosonbf->Fill(m_Z_mass);
+            zbosonBf->Fill(m_Z_mass);
             if(dif > 0){
                 MuonPtBf1->Fill(m_lep_pt[0]);
                 MuonPtBf2->Fill(m_lep_pt[1]);
@@ -211,6 +229,7 @@ void CountEvents_Data(){
     
     c2->cd(1);
     zbosonBf->Draw("");
+    zboson->Draw("same");
     c2->cd(2);
     zboson->Draw("");
     
