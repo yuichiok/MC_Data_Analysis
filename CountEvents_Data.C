@@ -81,8 +81,8 @@ void CountEvents_Data(){
     c1->Divide(2,2,0.02,0.02);
     c2->Divide(2,1,0.02,0.02);
     
-    c1->SetLogy();
-    c2->SetLogy();
+    //c1->SetLogy();
+    //c2->SetLogy();
     
     //create histogram
     THStack *ptBf           = new THStack("ptbf","pt distribution of muons (before cut)");
@@ -108,23 +108,23 @@ void CountEvents_Data(){
    
     //setting color scheme 
     MuonPtBf1->SetFillColorAlpha(kRed,0.35);
-    //MuonPtBf1->SetFillStyle(3012);
+    MuonPtBf1->SetFillStyle(3002);
     MuonPtBf2->SetFillColorAlpha(kBlue,0.35);
-    //MuonPtBf2->SetFillStyle(3012);
+    MuonPtBf2->SetFillStyle(3003);
     MuonEtaBf1->SetFillColorAlpha(kRed,0.35);
-    //MuonEtaBf1->SetFillStyle(4050);
+    MuonEtaBf1->SetFillStyle(3002);
     MuonEtaBf2->SetFillColorAlpha(kBlue,0.35);
-    //MuonEtaBf2->SetFillStyle(4050);
+    MuonEtaBf2->SetFillStyle(3003);
     MuonPt1->SetFillColorAlpha(kRed,0.35);
-    //MuonPt1->SetFillStyle(4050);
+    MuonPt1->SetFillStyle(3002);
     MuonPt2->SetFillColorAlpha(kBlue,0.35);
-    //MuonPt2->SetFillStyle(4050);
+    MuonPt2->SetFillStyle(3003);
     MuonEta1->SetFillColorAlpha(kRed,0.35);
-    //MuonEta1->SetFillStyle(4050); 
+    MuonEta1->SetFillStyle(3002); 
     MuonEta2->SetFillColorAlpha(kBlue,0.35);
-    //MuonEta2->SetFillStyle(4050);
+    MuonEta2->SetFillStyle(3003);
     zbosonBf->SetFillColorAlpha(kRed,0.35);
-    zbosonBf->SetFillStyle(3003);
+    zbosonBf->SetFillStyle(3002);
     zboson->SetFillColorAlpha(kBlue,0.35);
     zboson->SetFillStyle(3003);
     
@@ -212,27 +212,32 @@ void CountEvents_Data(){
     }
     
     c1->cd(1);
+    gPad->SetLogy();
     ptBf->Add(MuonPtBf1);
     ptBf->Add(MuonPtBf2);
     ptBf->Draw("pfc nostack");
     c1->cd(2);
+    gPad->SetLogy();
     pt->Add(MuonPt1);
     pt->Add(MuonPt2);
     pt->Draw("pfc nostack");
     c1->cd(3);
+    gPad->SetLogy();
     etaBf->Add(MuonEtaBf1);
     etaBf->Add(MuonEtaBf2);
     etaBf->Draw("pfc nostack");
     c1->cd(4);
+    gPad->SetLogy();
     eta->Add(MuonEta1);
     eta->Add(MuonEta2);
     eta->Draw("pfc nostack");
    
     
     c2->cd(1);
+    gPad->SetLogy();
     zbosonBf->Draw("");
-    zboson->Draw("same");
     c2->cd(2);
+    gPad->SetLogy();
     zboson->Draw("");
     
     
