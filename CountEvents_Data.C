@@ -110,23 +110,23 @@ void CountEvents_Data(){
     MuonPtBf1->SetFillColorAlpha(kRed,0.35);
     MuonPtBf1->SetFillStyle(3002);
     MuonPtBf2->SetFillColorAlpha(kBlue,0.35);
-    MuonPtBf2->SetFillStyle(3003);
+    MuonPtBf2->SetFillStyle(3001);
     MuonEtaBf1->SetFillColorAlpha(kRed,0.35);
     MuonEtaBf1->SetFillStyle(3002);
     MuonEtaBf2->SetFillColorAlpha(kBlue,0.35);
-    MuonEtaBf2->SetFillStyle(3003);
+    MuonEtaBf2->SetFillStyle(3001);
     MuonPt1->SetFillColorAlpha(kRed,0.35);
     MuonPt1->SetFillStyle(3002);
     MuonPt2->SetFillColorAlpha(kBlue,0.35);
-    MuonPt2->SetFillStyle(3003);
+    MuonPt2->SetFillStyle(3001);
     MuonEta1->SetFillColorAlpha(kRed,0.35);
     MuonEta1->SetFillStyle(3002); 
     MuonEta2->SetFillColorAlpha(kBlue,0.35);
-    MuonEta2->SetFillStyle(3003);
+    MuonEta2->SetFillStyle(3001);
     zbosonBf->SetFillColorAlpha(kRed,0.35);
     zbosonBf->SetFillStyle(3002);
     zboson->SetFillColorAlpha(kBlue,0.35);
-    zboson->SetFillStyle(3003);
+    zboson->SetFillStyle(3001);
     
     std::cout << "Total Events: " << nEntry << std::endl;
     
