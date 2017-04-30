@@ -107,29 +107,31 @@ void CountEvents_Data(){
     TH1F *DY_Eta            = new TH1F("DYEta","#eta distribution of DY process",100,-2.5,2.5);
    
     //setting color scheme 
-    MuonPtBf1->SetFillColor(kRed);
+    MuonPtBf1->SetFillColorAlpha(kRed,0.35);
     //MuonPtBf1->SetFillStyle(3012);
-    MuonPtBf2->SetFillColor(kBlue);
+    MuonPtBf2->SetFillColorAlpha(kBlue,0.35);
     //MuonPtBf2->SetFillStyle(3012);
-    MuonEtaBf1->SetFillColor(kRed);
+    MuonEtaBf1->SetFillColorAlpha(kRed,0.35);
     //MuonEtaBf1->SetFillStyle(4050);
-    MuonEtaBf2->SetFillColor(kBlue);
+    MuonEtaBf2->SetFillColorAlpha(kBlue,0.35);
     //MuonEtaBf2->SetFillStyle(4050);
-    MuonPt1->SetFillColor(kRed);
+    MuonPt1->SetFillColorAlpha(kRed,0.35);
     //MuonPt1->SetFillStyle(4050);
-    MuonPt2->SetFillColor(kBlue);
+    MuonPt2->SetFillColorAlpha(kBlue,0.35);
     //MuonPt2->SetFillStyle(4050);
-    MuonEta1->SetFillColor(kRed);
+    MuonEta1->SetFillColorAlpha(kRed,0.35);
     //MuonEta1->SetFillStyle(4050); 
-    MuonEta2->SetFillColor(kBlue);
+    MuonEta2->SetFillColorAlpha(kBlue,0.35);
     //MuonEta2->SetFillStyle(4050);
-    zbosonBf->SetFillColor(kRed);
-    zboson->SetFillColor(kBlue);
+    zbosonBf->SetFillColorAlpha(kRed,0.35);
+    zbosonBf->SetFillStyle(3003);
+    zboson->SetFillColorAlpha(kBlue,0.35);
+    zboson->SetFillStyle(3003);
     
     std::cout << "Total Events: " << nEntry << std::endl;
     
     //loop over events
-    for(int iEntry=0; iEntry<100 ;++iEntry)
+    for(int iEntry=0; iEntry<nEntry ;++iEntry)
     {
         tree->GetEntry(iEntry);
         
