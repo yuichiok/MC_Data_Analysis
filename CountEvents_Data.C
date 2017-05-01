@@ -75,8 +75,8 @@ void CountEvents_Data(){
     
     
     
-    TCanvas *c1 = new TCanvas("c1","multipad1",500,500);
-    TCanvas *c2 = new TCanvas("c2","multipad2",500,250);
+    TCanvas *c1 = new TCanvas("c1","multipad1",1000,600);
+    TCanvas *c2 = new TCanvas("c2","multipad2",1000,500);
     gStyle->SetOptStat(1);
     c1->Divide(2,2,0.02,0.02);
     c2->Divide(2,1,0.02,0.02);
@@ -85,10 +85,12 @@ void CountEvents_Data(){
     //c2->SetLogy();
     
     //create histogram
+    /*
     THStack *ptBf           = new THStack("ptbf","pt distribution of muons (before cut)");
     THStack *etaBf          = new THStack("etabf","#eta distribution of muons (before cut)");
     THStack *pt             = new THStack("pt","pt distribution of muons");
     THStack *eta            = new THStack("eta","#eta distribution of muons");
+    */
 
     TH1F *zbosonBf          = new TH1F("zmbf","Z0 invariant mass distribution (before cut)",100,0,300.);
     TH1F *zboson            = new TH1F("zm","Z0 invariant mass distribution",100,0,300.);
@@ -131,7 +133,7 @@ void CountEvents_Data(){
     std::cout << "Total Events: " << nEntry << std::endl;
     
     //loop over events
-    for(int iEntry=0; iEntry<nEntry ;++iEntry)
+    for(int iEntry=0; iEntry<100 ;++iEntry)
     {
         tree->GetEntry(iEntry);
         
@@ -213,25 +215,32 @@ void CountEvents_Data(){
     
     c1->cd(1);
     gPad->SetLogy();
-    ptBf->Add(MuonPtBf1);
-    ptBf->Add(MuonPtBf2);
-    ptBf->Draw("pfc nostack");
+    //ptBf->Add(MuonPtBf1);
+    //ptBf->Add(MuonPtBf2);
+    //ptBf->Draw("pfc nostack");
+    MuonPtBf1->Draw();
+    MuonPtBf2->Draw("same");
     c1->cd(2);
     gPad->SetLogy();
-    pt->Add(MuonPt1);
-    pt->Add(MuonPt2);
-    pt->Draw("pfc nostack");
+    //pt->Add(MuonPt1);
+    //pt->Add(MuonPt2);
+    //pt->Draw("pfc nostack");
+    MuonPt1->Draw();
+    MuonPt2->Draw("same");
     c1->cd(3);
     gPad->SetLogy();
-    etaBf->Add(MuonEtaBf1);
-    etaBf->Add(MuonEtaBf2);
-    etaBf->Draw("pfc nostack");
+    //etaBf->Add(MuonEtaBf1);
+    //etaBf->Add(MuonEtaBf2);
+    //etaBf->Draw("pfc nostack");
+    MuonEtaBf1->Draw();
+    MuonEtaBf2->Draw("same");
     c1->cd(4);
     gPad->SetLogy();
-    eta->Add(MuonEta1);
-    eta->Add(MuonEta2);
-    eta->Draw("pfc nostack");
-   
+    //eta->Add(MuonEta1);
+    //eta->Add(MuonEta2);
+    //eta->Draw("pfc nostack");
+    MuonEta1->Draw();
+    MuonEta2->Draw("same");
     
     c2->cd(1);
     gPad->SetLogy();
