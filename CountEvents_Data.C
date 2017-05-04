@@ -30,7 +30,7 @@ void CountEvents_Data(){
     int m_nJets;
     float m_Vtype ;
     float m_Z_mass, m_Z_pt, m_Z_eta, m_Z_phi;
-    float m_jet_pt[maxNumJets], m_jet_eta[maxNumJets], m_jet_phi[maxNumJets];
+    float m_jet_pt[maxNumJets], m_jet_eta[maxNumJets], m_jet_phi[maxNumJets], m_jet_msv[maxNumJets];;
     
     float m_MET_et;
     float m_MET_phi;
@@ -63,7 +63,8 @@ void CountEvents_Data(){
     tree->SetBranchAddress( "Jet_eta"        ,  m_jet_eta     );
     tree->SetBranchAddress( "Jet_phi"        ,  m_jet_phi     );
     tree->SetBranchAddress( "Vtype"          , &m_Vtype       );
-    
+    tree->SetBranchAddress( "Jet_vtxMass"    ,  m_jet_msv     );
+
     tree->SetBranchAddress( "met_pt"     , &m_MET_et    );
     tree->SetBranchAddress( "met_phi"    , &m_MET_phi   );
     tree->SetBranchAddress( "met_sumEt"  , &m_MET_sumet );
@@ -76,8 +77,8 @@ void CountEvents_Data(){
     
     
     TCanvas *c1 = new TCanvas("c1","multipad1",1000,600);
-    TCanvas *c2 = new TCanvas("c2","multipad2",1000,500);
-    TCanvas *c3 = new TCanvas("c3","multipad3",1500,600);
+    TCanvas *c2 = new TCanvas("c2","multipad2",1000,600);
+    TCanvas *c3 = new TCanvas("c3","multipad3",1000,600);
     gStyle->SetOptStat(1);
     c1->Divide(2,2,0.02,0.02);
     c2->Divide(2,1,0.02,0.02);
@@ -109,6 +110,7 @@ void CountEvents_Data(){
     TH1F *JetPt             = new TH1F("jetPt","Jet p_T (Z+jet w/MET cut)",100,0,200.);
     TH1F *JetEta            = new TH1F("jetEta","Jet #eta (Z+jet w/MET cut)",100,-4,4);
     TH1F *nMET				= new TH1F("nmet","MET (Valid Z-boson)",100,0,200.);
+	TH1F *MSV				= new TH1F("msv","M_{SV} (Z+jet w/MET cut)",100,0,20.);
     
 	TH1F *DY_Pt             = new TH1F("DYPt","pt distribution of DY process",100,0,300.);
     TH1F *DY_Eta            = new TH1F("DYEta","#eta distribution of DY process",100,-4,4);
@@ -149,12 +151,14 @@ void CountEvents_Data(){
 	nPV->SetFillStyle(3001);
 	nMET->SetFillColorAlpha(kRed,0.35);
 	nMET->SetFillStyle(3001);
+	MSV->SetFillColorAlpha(kRed,0.35);
+	MSV->SetFillStyle(3001);
 
     
     std::cout << "Total Events: " << nEntry << std::endl;
     
     //loop over events
-    for(int iEntry=0; iEntry<100 ;++iEntry)
+    for(int iEntry=0; iEntry<nEntry ;++iEntry)
     {
         tree->GetEntry(iEntry);
         
@@ -219,7 +223,8 @@ void CountEvents_Data(){
                         
                         JetPt->Fill(m_jet_pt[j]);
                         JetEta->Fill(m_jet_eta[j]);
-                        
+                        MSV->Fill(m_jet_msv[j]);
+
                     }
                     
                 }
@@ -252,5 +257,31 @@ void CountEvents_Data(){
     gPad->SetLogy();
     zboson->Draw("");
     
+	c3->cd(1);
+	gPad->SetLogy();
+	nMET->Draw("");
+	c3->cd(2);
+	gPad->SetLogy();
+	JetMult->Draw("");
+	c3->cd(3);
+	gPad->SetLogy();
+	MSV->Draw("");
+	c3->cd(4);
+	gPad->SetLogy();
+	nPV->Draw("");
+	c3->cd(5);
+	gPad->SetLogy();
+	JetPt->Draw("");
+	c3->cd(6);
+	gPad->SetLogy();
+	JetEta->Draw("");
+
+	c1->Print("Lepton.pdf");
+	c2->Print("Z-boson.pdf");
+	c3->Print("Jet.pdf");
+
+	gSystem->Exit(0);
+
+
     
 }
