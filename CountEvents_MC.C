@@ -91,7 +91,7 @@ void CountEvents_MC(){
     
     TH1F *DY_Pt             = new TH1F("DYPt","pt distribution of DY process",100,0,300.);
     TH1F *DY_Eta            = new TH1F("DYEta","#eta distribution of DY process",100,-2.5,2.5);
-
+    
     
     
     std::cout << "Total Events: " << nEntry << std::endl;
@@ -163,9 +163,9 @@ void CountEvents_MC(){
     DY_Pt->Draw("");
     c2->cd(2);
     DY_Eta->Draw("");
-   
-   c1->Print("c1.pdf");
     
-   gSystem->Exit(0); 
+    c1->Print("c1.pdf");
+    
+    gSystem->Exit(0);
     
 }

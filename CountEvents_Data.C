@@ -77,7 +77,7 @@ void CountEvents_Data(){
     
     TCanvas *c1 = new TCanvas("c1","multipad1",1000,600);
     TCanvas *c2 = new TCanvas("c2","multipad2",1000,500);
-	TCanvas *c3 = new TCanvas("c2","multipad3",1000,500);
+    TCanvas *c3 = new TCanvas("c2","multipad3",1000,500);
     gStyle->SetOptStat(1);
     c1->Divide(2,2,0.02,0.02);
     c2->Divide(2,1,0.02,0.02);
@@ -88,12 +88,12 @@ void CountEvents_Data(){
     
     //create histogram
     /*
-    THStack *ptBf           = new THStack("ptbf","pt distribution of muons (before cut)");
-    THStack *etaBf          = new THStack("etabf","#eta distribution of muons (before cut)");
-    THStack *pt             = new THStack("pt","pt distribution of muons");
-    THStack *eta            = new THStack("eta","#eta distribution of muons");
-    */
-
+     THStack *ptBf           = new THStack("ptbf","pt distribution of muons (before cut)");
+     THStack *etaBf          = new THStack("etabf","#eta distribution of muons (before cut)");
+     THStack *pt             = new THStack("pt","pt distribution of muons");
+     THStack *eta            = new THStack("eta","#eta distribution of muons");
+     */
+    
     TH1F *zbosonBf          = new TH1F("zmbf","Z0 invariant mass distribution (before cut)",100,0,300.);
     TH1F *zboson            = new TH1F("zm","Z0 invariant mass distribution",100,0,300.);
     TH1F *nPV               = new TH1F("nPVs","Number of Primary Vertices",50,0,50.);
@@ -109,8 +109,8 @@ void CountEvents_Data(){
     TH1F *JetEta            = new TH1F("jetEta","#eta distribution of jets",100,-2.5,2.5);
     TH1F *DY_Pt             = new TH1F("DYPt","pt distribution of DY process",100,0,300.);
     TH1F *DY_Eta            = new TH1F("DYEta","#eta distribution of DY process",100,-2.5,2.5);
-   
-    //setting color scheme 
+    
+    //setting color scheme
     MuonPtBf1->SetFillColorAlpha(kRed,0.35);
     MuonPtBf1->SetFillStyle(3002);
     MuonPtBf2->SetFillColorAlpha(kBlue,0.35);
@@ -124,7 +124,7 @@ void CountEvents_Data(){
     MuonPt2->SetFillColorAlpha(kBlue,0.35);
     MuonPt2->SetFillStyle(3001);
     MuonEta1->SetFillColorAlpha(kRed,0.35);
-    MuonEta1->SetFillStyle(3002); 
+    MuonEta1->SetFillStyle(3002);
     MuonEta2->SetFillColorAlpha(kBlue,0.35);
     MuonEta2->SetFillStyle(3001);
     zbosonBf->SetFillColorAlpha(kRed,0.35);
@@ -170,32 +170,32 @@ void CountEvents_Data(){
             if( m_lep_pt[0] > 20 && abs(m_lep_eta[0]) < 2.4 && m_lep_iso[0] < 0.25) Lep0_Check = true;
             if( m_lep_pt[1] > 20 && abs(m_lep_eta[1]) < 2.4 && m_lep_iso[1] < 0.25) Lep1_Check = true;
             
-			if( Zmass_Check==true ){
-					if(Lep0_Check==true && Lep1_Check==true){
-						
-						zboson->Fill(m_Z_mass);
-						if(dif > 0){
-							MuonPt1->Fill(m_lep_pt[0]);
-							MuonPt2->Fill(m_lep_pt[1]);
-							MuonEta1->Fill(m_lep_eta[0]);
-							MuonEta2->Fill(m_lep_eta[1]);
-						}else if(dif < 0){
-							MuonPt1->Fill(m_lep_pt[1]);
-							MuonPt2->Fill(m_lep_pt[0]);
-							MuonEta1->Fill(m_lep_eta[1]);
-							MuonEta2->Fill(m_lep_eta[0]);
-						}
-						
-						for(int j=0; j<m_nJets; j++){
-							
-							if( m_jet_pt[j] < 30. || abs(m_jet_eta[j]) > 2.4) continue;
-							
-							JetPt->Fill(m_jet_pt[j]);
-							JetEta->Fill(m_jet_eta[j]);
-							
-						}
-						
-					}
+            if( Zmass_Check==true ){
+                if(Lep0_Check==true && Lep1_Check==true){
+                    
+                    zboson->Fill(m_Z_mass);
+                    if(dif > 0){
+                        MuonPt1->Fill(m_lep_pt[0]);
+                        MuonPt2->Fill(m_lep_pt[1]);
+                        MuonEta1->Fill(m_lep_eta[0]);
+                        MuonEta2->Fill(m_lep_eta[1]);
+                    }else if(dif < 0){
+                        MuonPt1->Fill(m_lep_pt[1]);
+                        MuonPt2->Fill(m_lep_pt[0]);
+                        MuonEta1->Fill(m_lep_eta[1]);
+                        MuonEta2->Fill(m_lep_eta[0]);
+                    }
+                    
+                    for(int j=0; j<m_nJets; j++){
+                        
+                        if( m_jet_pt[j] < 30. || abs(m_jet_eta[j]) > 2.4) continue;
+                        
+                        JetPt->Fill(m_jet_pt[j]);
+                        JetEta->Fill(m_jet_eta[j]);
+                        
+                    }
+                    
+                }
             }
         }
         
