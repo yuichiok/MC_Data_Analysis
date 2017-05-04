@@ -164,6 +164,7 @@ void CountEvents_Data(){
         if(m_Vtype == 0 || m_nLeps == 2)
         {
             bool Zmass_Check = false;
+            bool MET_Check = false;
             bool Lep0_Check = false;
             bool Lep1_Check = false;
             double dif = 0;
@@ -186,14 +187,19 @@ void CountEvents_Data(){
             }
             
             if( m_Z_mass>70. && m_Z_mass<110. ) Zmass_Check = true;
+            if( m_MET_et<=40. ) MET_Check = true;
             if( m_lep_pt[0] > 20 && abs(m_lep_eta[0]) < 2.4 && m_lep_iso[0] < 0.25) Lep0_Check = true;
             if( m_lep_pt[1] > 20 && abs(m_lep_eta[1]) < 2.4 && m_lep_iso[1] < 0.25) Lep1_Check = true;
             
             if( Zmass_Check==true ){
 
 				zboson->Fill(m_Z_mass);
+                nMET->Fill(m_MET_et);
+                JetMult->Fill(m_nJets);
 
-                if(Lep0_Check==true && Lep1_Check==true){
+                if(Lep0_Check==true && Lep1_Check==true && MET_Check==true){
+                    
+                    nPV->Fill(m_nPVs);
                     
                     if(dif > 0){
                         MuonPt1->Fill(m_lep_pt[0]);
@@ -219,9 +225,6 @@ void CountEvents_Data(){
                 }
             }
         }
-        
-        
-        nPV->Fill(m_nPVs);
         
     }
     
