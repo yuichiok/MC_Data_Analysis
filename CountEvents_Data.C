@@ -41,6 +41,11 @@ void CountEvents_Data(){
     unsigned int m_run;
     unsigned int m_lumi;
     
+	std::map<TString, std::map<TString, std::vector<bool> > > HFJets   ;
+	std::map<TString, std::map<TString,              bool > > hasHFJets;
+
+
+
     TTreeReader myReader("EventTree", f);
     TTree *tree = (TTree*)f->Get("tree");
     
@@ -158,7 +163,7 @@ void CountEvents_Data(){
     std::cout << "Total Events: " << nEntry << std::endl;
     
     //loop over events
-    for(int iEntry=0; iEntry<nEntry ;++iEntry)
+    for(int iEntry=0; iEntry<100 ;++iEntry)
     {
         tree->GetEntry(iEntry);
         
