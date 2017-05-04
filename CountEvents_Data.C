@@ -77,9 +77,11 @@ void CountEvents_Data(){
     
     TCanvas *c1 = new TCanvas("c1","multipad1",1000,600);
     TCanvas *c2 = new TCanvas("c2","multipad2",1000,500);
+	TCanvas *c3 = new TCanvas("c2","multipad3",1000,500);
     gStyle->SetOptStat(1);
     c1->Divide(2,2,0.02,0.02);
     c2->Divide(2,1,0.02,0.02);
+    c3->Divide();
     
     //c1->SetLogy();
     //c2->SetLogy();
@@ -168,46 +170,35 @@ void CountEvents_Data(){
             if( m_lep_pt[0] > 20 && abs(m_lep_eta[0]) < 2.4 && m_lep_iso[0] < 0.25) Lep0_Check = true;
             if( m_lep_pt[1] > 20 && abs(m_lep_eta[1]) < 2.4 && m_lep_iso[1] < 0.25) Lep1_Check = true;
             
-            if(Lep0_Check==true && Lep1_Check==true && Zmass_Check==true){
-                
-                zboson->Fill(m_Z_mass);
-                if(dif > 0){
-                    MuonPt1->Fill(m_lep_pt[0]);
-                    MuonPt2->Fill(m_lep_pt[1]);
-                    MuonEta1->Fill(m_lep_eta[0]);
-                    MuonEta2->Fill(m_lep_eta[1]);
-                }else if(dif < 0){
-                    MuonPt1->Fill(m_lep_pt[1]);
-                    MuonPt2->Fill(m_lep_pt[0]);
-                    MuonEta1->Fill(m_lep_eta[1]);
-                    MuonEta2->Fill(m_lep_eta[0]);
-                }
-                
-                for(int j=0; j<m_nJets; j++){
-                    
-                    if( m_jet_pt[j] < 30. || abs(m_jet_eta[j]) > 2.4) continue;
-                    
-                    JetPt->Fill(m_jet_pt[j]);
-                    JetEta->Fill(m_jet_eta[j]);
-                    
-                }
-                
+			if( Zmass_Check==true ){
+					if(Lep0_Check==true && Lep1_Check==true){
+						
+						zboson->Fill(m_Z_mass);
+						if(dif > 0){
+							MuonPt1->Fill(m_lep_pt[0]);
+							MuonPt2->Fill(m_lep_pt[1]);
+							MuonEta1->Fill(m_lep_eta[0]);
+							MuonEta2->Fill(m_lep_eta[1]);
+						}else if(dif < 0){
+							MuonPt1->Fill(m_lep_pt[1]);
+							MuonPt2->Fill(m_lep_pt[0]);
+							MuonEta1->Fill(m_lep_eta[1]);
+							MuonEta2->Fill(m_lep_eta[0]);
+						}
+						
+						for(int j=0; j<m_nJets; j++){
+							
+							if( m_jet_pt[j] < 30. || abs(m_jet_eta[j]) > 2.4) continue;
+							
+							JetPt->Fill(m_jet_pt[j]);
+							JetEta->Fill(m_jet_eta[j]);
+							
+						}
+						
+					}
             }
-            
         }
         
-        if(m_Vtype == 0 || m_Vtype == 1)
-        {
-            for(int i=0; i<m_nLeps; i++)
-            {
-                if( m_lep_pt[i] < 20 || abs(m_lep_eta[i]) > 2.4 || m_lep_iso[i] > 0.25) continue;
-                
-                DY_Pt->Fill(m_lep_pt[i]);
-                DY_Eta->Fill(m_lep_eta[i]);
-                
-            }
-            
-        }
         
         nPV->Fill(m_nPVs);
         
@@ -215,30 +206,18 @@ void CountEvents_Data(){
     
     c1->cd(1);
     gPad->SetLogy();
-    //ptBf->Add(MuonPtBf1);
-    //ptBf->Add(MuonPtBf2);
-    //ptBf->Draw("pfc nostack");
     MuonPtBf1->Draw();
     MuonPtBf2->Draw("same");
     c1->cd(2);
     gPad->SetLogy();
-    //pt->Add(MuonPt1);
-    //pt->Add(MuonPt2);
-    //pt->Draw("pfc nostack");
     MuonPt1->Draw();
     MuonPt2->Draw("same");
     c1->cd(3);
     gPad->SetLogy();
-    //etaBf->Add(MuonEtaBf1);
-    //etaBf->Add(MuonEtaBf2);
-    //etaBf->Draw("pfc nostack");
     MuonEtaBf1->Draw();
     MuonEtaBf2->Draw("same");
     c1->cd(4);
     gPad->SetLogy();
-    //eta->Add(MuonEta1);
-    //eta->Add(MuonEta2);
-    //eta->Draw("pfc nostack");
     MuonEta1->Draw();
     MuonEta2->Draw("same");
     
