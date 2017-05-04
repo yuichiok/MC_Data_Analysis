@@ -77,11 +77,11 @@ void CountEvents_Data(){
     
     TCanvas *c1 = new TCanvas("c1","multipad1",1000,600);
     TCanvas *c2 = new TCanvas("c2","multipad2",1000,500);
-    TCanvas *c3 = new TCanvas("c2","multipad3",1000,500);
+    TCanvas *c3 = new TCanvas("c3","multipad3",1500,600);
     gStyle->SetOptStat(1);
     c1->Divide(2,2,0.02,0.02);
     c2->Divide(2,1,0.02,0.02);
-    c3->Divide();
+    c3->Divide(3,2,0.02,0.02);
     
     //c1->SetLogy();
     //c2->SetLogy();
@@ -94,43 +94,62 @@ void CountEvents_Data(){
      THStack *eta            = new THStack("eta","#eta distribution of muons");
      */
     
-    TH1F *zbosonBf          = new TH1F("zmbf","Z0 invariant mass distribution (before cut)",100,0,300.);
-    TH1F *zboson            = new TH1F("zm","Z0 invariant mass distribution",100,0,300.);
-    TH1F *nPV               = new TH1F("nPVs","Number of Primary Vertices",50,0,50.);
-    TH1F *MuonPtBf1         = new TH1F("muonPtbf1","pt distribution of muons",100,0,300.);
-    TH1F *MuonEtaBf1        = new TH1F("muonEtabf1","#eta distribution of muons",100,-2.5,2.5);
-    TH1F *MuonPt1           = new TH1F("muonPt1","pt distribution of muons",100,0,300.);
-    TH1F *MuonEta1          = new TH1F("muonEta1","#eta distribution of muons",100,-2.5,2.5);
-    TH1F *MuonPtBf2         = new TH1F("muonPtbf2","pt distribution of muons",100,0,300.);
-    TH1F *MuonEtaBf2        = new TH1F("muonEtabf2","#eta distribution of muons",100,-2.5,2.5);
-    TH1F *MuonPt2           = new TH1F("muonPt2","pt distribution of muons",100,0,300.);
-    TH1F *MuonEta2          = new TH1F("muonEta2","#eta distribution of muons",100,-2.5,2.5);
-    TH1F *JetPt             = new TH1F("jetPt","pt distribution of jets",100,0,300.);
-    TH1F *JetEta            = new TH1F("jetEta","#eta distribution of jets",100,-2.5,2.5);
-    TH1F *DY_Pt             = new TH1F("DYPt","pt distribution of DY process",100,0,300.);
-    TH1F *DY_Eta            = new TH1F("DYEta","#eta distribution of DY process",100,-2.5,2.5);
+    TH1F *zbosonBf          = new TH1F("zmbf","Dilepton Mass (w/o Lepton cut)",100,0,300.);
+    TH1F *zboson            = new TH1F("zm","Dilepton Mass (w/ Lepton cut)",100,0,300.);
+    TH1F *nPV               = new TH1F("nPVs","Primary Vertices (Z+jet w/MET cut)",100,0,100.);
+    TH1F *MuonPtBf1         = new TH1F("muonPtbf1","Muon p_T (w/o cut)",100,0,300.);
+    TH1F *MuonEtaBf1        = new TH1F("muonEtabf1","Muon #eta (w/o cut)",100,-4,4);
+    TH1F *MuonPt1           = new TH1F("muonPt1","Muon p_T (Z+jet w/MET cut)",100,0,300.);
+    TH1F *MuonEta1          = new TH1F("muonEta1","Muon #eta (Z+jet w/MET cut)",100,-4,4);
+    TH1F *MuonPtBf2         = new TH1F("muonPtbf2","Muon p_T (w/o cut)",100,0,300.);
+    TH1F *MuonEtaBf2        = new TH1F("muonEtabf2","Muon #eta (w/o cut)",100,-4,4);
+    TH1F *MuonPt2           = new TH1F("muonPt2","Muon p_T (Z+jet w/MET cut)",100,0,300.);
+    TH1F *MuonEta2          = new TH1F("muonEta2","Muon #eta (Z+jet w/MET cut)",100,-4,4);
+	TH1F *JetMult           = new TH1F("jetMult","Jet Multiplicity (Valid Z-boson)",10,0,10.);
+    TH1F *JetPt             = new TH1F("jetPt","Jet p_T (Z+jet w/MET cut)",100,0,200.);
+    TH1F *JetEta            = new TH1F("jetEta","Jet #eta (Z+jet w/MET cut)",100,-4,4);
+    TH1F *nMET				= new TH1F("nmet","MET (Valid Z-boson)",100,0,200.);
+    
+	TH1F *DY_Pt             = new TH1F("DYPt","pt distribution of DY process",100,0,300.);
+    TH1F *DY_Eta            = new TH1F("DYEta","#eta distribution of DY process",100,-4,4);
     
     //setting color scheme
     MuonPtBf1->SetFillColorAlpha(kRed,0.35);
     MuonPtBf1->SetFillStyle(3002);
     MuonPtBf2->SetFillColorAlpha(kBlue,0.35);
     MuonPtBf2->SetFillStyle(3001);
-    MuonEtaBf1->SetFillColorAlpha(kRed,0.35);
+    
+	MuonEtaBf1->SetFillColorAlpha(kRed,0.35);
     MuonEtaBf1->SetFillStyle(3002);
     MuonEtaBf2->SetFillColorAlpha(kBlue,0.35);
     MuonEtaBf2->SetFillStyle(3001);
-    MuonPt1->SetFillColorAlpha(kRed,0.35);
+    
+	MuonPt1->SetFillColorAlpha(kRed,0.35);
     MuonPt1->SetFillStyle(3002);
     MuonPt2->SetFillColorAlpha(kBlue,0.35);
     MuonPt2->SetFillStyle(3001);
-    MuonEta1->SetFillColorAlpha(kRed,0.35);
+    
+	MuonEta1->SetFillColorAlpha(kRed,0.35);
     MuonEta1->SetFillStyle(3002);
     MuonEta2->SetFillColorAlpha(kBlue,0.35);
     MuonEta2->SetFillStyle(3001);
-    zbosonBf->SetFillColorAlpha(kRed,0.35);
+    
+	zbosonBf->SetFillColorAlpha(kRed,0.35);
     zbosonBf->SetFillStyle(3002);
     zboson->SetFillColorAlpha(kBlue,0.35);
     zboson->SetFillStyle(3001);
+
+	JetMult->SetFillColorAlpha(kRed,0.35);
+	JetMult->SetFillStyle(3001);
+	JetPt->SetFillColorAlpha(kRed,0.35);
+	JetPt->SetFillStyle(3001);
+	JetEta->SetFillColorAlpha(kRed,0.35);
+	JetEta->SetFillStyle(3001);
+	nPV->SetFillColorAlpha(kRed,0.35);
+	nPV->SetFillStyle(3001);
+	nMET->SetFillColorAlpha(kRed,0.35);
+	nMET->SetFillStyle(3001);
+
     
     std::cout << "Total Events: " << nEntry << std::endl;
     
@@ -171,9 +190,11 @@ void CountEvents_Data(){
             if( m_lep_pt[1] > 20 && abs(m_lep_eta[1]) < 2.4 && m_lep_iso[1] < 0.25) Lep1_Check = true;
             
             if( Zmass_Check==true ){
+
+				zboson->Fill(m_Z_mass);
+
                 if(Lep0_Check==true && Lep1_Check==true){
                     
-                    zboson->Fill(m_Z_mass);
                     if(dif > 0){
                         MuonPt1->Fill(m_lep_pt[0]);
                         MuonPt2->Fill(m_lep_pt[1]);
