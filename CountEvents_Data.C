@@ -50,8 +50,8 @@ void CountEvents_Data(){
     std::map<TString, std::map<TString,              bool > > hasHFJets;
     std::map<TString, std::map<TString,               int > > leadHFJet;
     
-    const vector<TString> EventHandler::HFTags = {"NoHF", "CSVL", "CSVM", "CSVT", "CSVS"};
-    const vector<TString> EventHandler::SVType = {"noSV", "pfSV", "pfISV", "cISV", "cISVf", "cISVp"};
+    const vector<TString> HFTags = {"NoHF", "CSVL", "CSVM", "CSVT", "CSVS"};
+    const vector<TString> SVType = {"noSV", "pfSV", "pfISV", "cISV", "cISVf", "cISVp"};
     
     std::map<TString, float*> SVVariable;
     std::map<TString, float > SVMinimumVal;
@@ -130,10 +130,12 @@ void CountEvents_Data(){
     TCanvas *c1 = new TCanvas("c1","multipad1",1000,600);
     TCanvas *c2 = new TCanvas("c2","multipad2",1000,600);
     TCanvas *c3 = new TCanvas("c3","multipad3",1000,600);
+    TCanvas *c4 = new TCanvas("c4","multipad4",1000,600);
     gStyle->SetOptStat(1);
     c1->Divide(2,2,0.02,0.02);
     c2->Divide(2,1,0.02,0.02);
     c3->Divide(3,2,0.02,0.02);
+	c4->Divide(2,2,0.02,0.02);
     
     //c1->SetLogy();
     //c2->SetLogy();
@@ -165,6 +167,11 @@ void CountEvents_Data(){
     
     TH1F *DY_Pt             = new TH1F("DYPt","pt distribution of DY process",100,0,300.);
     TH1F *DY_Eta            = new TH1F("DYEta","#eta distribution of DY process",100,-4,4);
+
+	TH1F *HFJetMult         = new TH1F("hfjetMult","HF-Tagged Jet Multiplicity (Z+HF w/ MET cut) (CSVM,cISV)",10,0,10.);
+	TH1F *HFJetPt           = new TH1F("hfjetPt","Lead HF-Tagged Jet p_T (Z+HF w/ MET cut) (CSVM,cISV)",100,0,200.);
+	TH1F *HFJetEta          = new TH1F("hfjetEta","Lead HF-Tagged Jet #eta (Z+HF w/ MET cut) (CSVM,cISV)",100,-4,4);
+    TH1F *HFMSV             = new TH1F("hfmsv","Lead HF-Tagged Jet M_SV (pfIncSecVtx) (Z+HF w/ MET cut) (CSVM,cISV)",100,0,20.);
     
     //setting color scheme
     MuonPtBf1->SetFillColorAlpha(kRed,0.35);
@@ -204,12 +211,21 @@ void CountEvents_Data(){
     nMET->SetFillStyle(3001);
     MSV->SetFillColorAlpha(kRed,0.35);
     MSV->SetFillStyle(3001);
-    
-    
+
+    HFJetMult->SetFillColorAlpha(kRed,0.35);
+    HFJetMult->SetFillStyle(3001);
+    HFJetPt->SetFillColorAlpha(kRed,0.35);
+    HFJetPt->SetFillStyle(3001);
+    HFJetEta->SetFillColorAlpha(kRed,0.35);
+    HFJetEta->SetFillStyle(3001);
+    MSV->SetFillColorAlpha(kRed,0.35);
+    MSV->SetFillStyle(3001);
+
+
     std::cout << "Total Events: " << nEntry << std::endl;
     
     //loop over events
-    for(int iEntry=0; iEntry<100 ;++iEntry)
+    for(int iEntry=0; iEntry<1000 ;++iEntry)
     {
         tree->GetEntry(iEntry);
         
@@ -312,7 +328,16 @@ void CountEvents_Data(){
                                     {   leadHFJet[hfTag][svType] = vJet_i;
                                         hasHFJets[hfTag][svType] = true;
                                     }
+
                                 }
+						if(HFJets["CSVM"]["cISV"][vJet_i]){
+							HFJetMult->Fill(validJets.size());
+						}
+						if(hasHFJets["CSVM"]["cISV"]){
+							HFJetPt->Fill(m_jet_pt[leadHFJet["CSVM"]["cISV"]]);
+							HFJetEta->Fill(m_jet_eta[leadHFJet["CSVM"]["cISV"]]);
+							HFMSV->Fill(m_jet_msv[leadHFJet["CSVM"]["cISV"]]);
+						}
                         
                     }
                     
@@ -364,10 +389,25 @@ void CountEvents_Data(){
     c3->cd(6);
     gPad->SetLogy();
     JetEta->Draw("");
+
+	c4->cd(1);
+	gPad->SetLogy();
+	HFJetMult->Draw("");
+	c4->cd(2);
+	gPad->SetLogy();
+	HFMSV->Draw("");
+	c4->cd(3);
+	gPad->SetLogy();
+	HFJetPt->Draw("");
+	c4->cd(4);
+	gPad->SetLogy();
+	HFJetEta->Draw("");
+
     
     c1->Print("Lepton.pdf");
     c2->Print("Z-boson.pdf");
     c3->Print("Jet.pdf");
+	c4->Print("HFJet.pdf");
     
     gSystem->Exit(0);
     
