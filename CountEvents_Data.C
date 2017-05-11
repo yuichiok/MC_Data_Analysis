@@ -6,10 +6,11 @@
 void CountEvents_Data(){
     
     Int_t totalSize = 0;
-    std::string rootname;
+    char rootname[1000];
     std::ifstream fileout;
     
-    
+    gROOT->SetBatch(kTRUE);
+
     const static int maxNumJets  = 130;
     
     const static int maxNumElecs = 100;
@@ -150,13 +151,15 @@ void CountEvents_Data(){
     
     fileout.open("dataset_lists.txt");
     
-    while (std::getline(fileout, rootname)) {
+	int count_loop = 0;
+    while (fileout.getline(rootname, sizeof rootname)) {
         
         TFile *f = TFile::Open(rootname);
         if (f == 0) {
             // if we cannot open the file, print an error message and return immediatly
             std::cout << "error: " << rootname << " cannot be extracted." << std::endl;
-            return;
+            //return;
+			continue;
         }
         
         gStyle->SetPalette(kOcean);
@@ -235,7 +238,7 @@ void CountEvents_Data(){
         std::cout << "Total Events: " << nEntry << std::endl;
         
         //loop over events
-        for(int iEntry=0; iEntry<1 ;++iEntry)
+        for(int iEntry=0; iEntry<nEntry ;++iEntry)
         {
             tree->GetEntry(iEntry);
             
@@ -356,8 +359,18 @@ void CountEvents_Data(){
             }
             
         }
-        
+
+		if(count_loop==3){
+				gPad->SetLogy();
+				HFJetPt->Draw("");
+				HFJetPt->Print("test.pdf");
+		}
+
+		count_loop++;
+
     }
+
+	fileout.close();
     
     c1->cd(1);
     gPad->SetLogy();
