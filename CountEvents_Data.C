@@ -10,15 +10,142 @@ void CountEvents_Data(){
     std::ifstream fileout;
     
     
+    const static int maxNumJets  = 130;
     
+    const static int maxNumElecs = 100;
     
+    int   m_nLeps;
+    float m_lep_pt    [maxNumElecs];
+    float m_lep_eta   [maxNumElecs];
+    float m_lep_phi   [maxNumElecs];
+    int   m_lep_charge[maxNumElecs];
+    float m_lep_iso   [maxNumElecs];
     
+    int m_nJets;
+    float m_Vtype ;
+    float m_Z_mass, m_Z_pt, m_Z_eta, m_Z_phi;
+    float m_jet_pt[maxNumJets], m_jet_eta[maxNumJets], m_jet_phi[maxNumJets], m_jet_msv[maxNumJets];
+    float m_jet_csv[maxNumJets];
+    float m_jet_vtxCat_IVF[maxNumJets];
+    float m_jet_msv_new[maxNumJets];
+    float m_jet_msv_inc[maxNumJets];
+    float m_jet_vtxMassCorr_IVF[maxNumJets];
     
+    float m_MET_et;
+    float m_MET_phi;
+    float m_MET_sumet;
     
+    int m_event;
+    float m_nPVs;
+    unsigned int m_run;
+    unsigned int m_lumi;
     
+    std::map<TString, std::map<TString, std::vector<bool> > > HFJets   ;
+    std::map<TString, std::map<TString,              bool > > hasHFJets;
+    std::map<TString, std::map<TString,               int > > leadHFJet;
     
+    const vector<TString> HFTags = {"NoHF", "CSVL", "CSVM", "CSVT", "CSVS"};
+    const vector<TString> SVType = {"noSV", "pfSV", "pfISV", "cISV", "cISVf", "cISVp"};
     
+    std::map<TString, float*> SVVariable;
+    std::map<TString, float > SVMinimumVal;
+    std::map<TString, float*> HFTagDiscrimVar;
+    std::map<TString, float > HFTagDiscrimOP ;
+
     
+    TCanvas *c1 = new TCanvas("c1","multipad1",1000,600);
+    TCanvas *c2 = new TCanvas("c2","multipad2",1000,600);
+    TCanvas *c3 = new TCanvas("c3","multipad3",1000,600);
+    TCanvas *c4 = new TCanvas("c4","multipad4",1000,600);
+    gStyle->SetOptStat(1);
+    c1->Divide(2,2,0.02,0.02);
+    c2->Divide(2,1,0.02,0.02);
+    c3->Divide(3,2,0.02,0.02);
+    c4->Divide(2,2,0.02,0.02);
+    
+    //c1->SetLogy();
+    //c2->SetLogy();
+    
+    //create histogram
+    /*
+     THStack *ptBf           = new THStack("ptbf","pt distribution of muons (before cut)");
+     THStack *etaBf          = new THStack("etabf","#eta distribution of muons (before cut)");
+     THStack *pt             = new THStack("pt","pt distribution of muons");
+     THStack *eta            = new THStack("eta","#eta distribution of muons");
+     */
+    
+    TH1F *zbosonBf          = new TH1F("zmbf","Dilepton Mass (w/o Lepton cut)",100,0,300.);
+    TH1F *zboson            = new TH1F("zm","Dilepton Mass (w/ Lepton cut)",100,0,300.);
+    TH1F *nPV               = new TH1F("nPVs","Primary Vertices (Z+jet w/MET cut)",100,0,100.);
+    TH1F *MuonPtBf1         = new TH1F("muonPtbf1","Muon p_T (w/o cut)",100,0,300.);
+    TH1F *MuonEtaBf1        = new TH1F("muonEtabf1","Muon #eta (w/o cut)",100,-4,4);
+    TH1F *MuonPt1           = new TH1F("muonPt1","Muon p_T (Z+jet w/MET cut)",100,0,300.);
+    TH1F *MuonEta1          = new TH1F("muonEta1","Muon #eta (Z+jet w/MET cut)",100,-4,4);
+    TH1F *MuonPtBf2         = new TH1F("muonPtbf2","Muon p_T (w/o cut)",100,0,300.);
+    TH1F *MuonEtaBf2        = new TH1F("muonEtabf2","Muon #eta (w/o cut)",100,-4,4);
+    TH1F *MuonPt2           = new TH1F("muonPt2","Muon p_T (Z+jet w/MET cut)",100,0,300.);
+    TH1F *MuonEta2          = new TH1F("muonEta2","Muon #eta (Z+jet w/MET cut)",100,-4,4);
+    TH1F *JetMult           = new TH1F("jetMult","Jet Multiplicity (Valid Z-boson)",10,0,10.);
+    TH1F *JetPt             = new TH1F("jetPt","Jet p_T (Z+jet w/MET cut)",100,0,200.);
+    TH1F *JetEta            = new TH1F("jetEta","Jet #eta (Z+jet w/MET cut)",100,-4,4);
+    TH1F *nMET				= new TH1F("nmet","MET (Valid Z-boson)",100,0,200.);
+    TH1F *MSV				= new TH1F("msv","M_{SV} (Z+jet w/MET cut)",100,0,20.);
+    
+    TH1F *DY_Pt             = new TH1F("DYPt","pt distribution of DY process",100,0,300.);
+    TH1F *DY_Eta            = new TH1F("DYEta","#eta distribution of DY process",100,-4,4);
+    
+    TH1F *HFJetMult         = new TH1F("hfjetMult","HF-Tagged Jet Multiplicity (Z+HF w/ MET cut) (CSVM,cISV)",10,0,10.);
+    TH1F *HFJetPt           = new TH1F("hfjetPt","Lead HF-Tagged Jet p_T (Z+HF w/ MET cut) (CSVM,cISV)",100,0,200.);
+    TH1F *HFJetEta          = new TH1F("hfjetEta","Lead HF-Tagged Jet #eta (Z+HF w/ MET cut) (CSVM,cISV)",100,-4,4);
+    TH1F *HFMSV             = new TH1F("hfmsv","Lead HF-Tagged Jet M_SV (pfIncSecVtx) (Z+HF w/ MET cut) (CSVM,cISV)",100,0,20.);
+    
+    //setting color scheme
+    MuonPtBf1->SetFillColorAlpha(kRed,0.35);
+    MuonPtBf1->SetFillStyle(3002);
+    MuonPtBf2->SetFillColorAlpha(kBlue,0.35);
+    MuonPtBf2->SetFillStyle(3001);
+    
+    MuonEtaBf1->SetFillColorAlpha(kRed,0.35);
+    MuonEtaBf1->SetFillStyle(3002);
+    MuonEtaBf2->SetFillColorAlpha(kBlue,0.35);
+    MuonEtaBf2->SetFillStyle(3001);
+    
+    MuonPt1->SetFillColorAlpha(kRed,0.35);
+    MuonPt1->SetFillStyle(3002);
+    MuonPt2->SetFillColorAlpha(kBlue,0.35);
+    MuonPt2->SetFillStyle(3001);
+    
+    MuonEta1->SetFillColorAlpha(kRed,0.35);
+    MuonEta1->SetFillStyle(3002);
+    MuonEta2->SetFillColorAlpha(kBlue,0.35);
+    MuonEta2->SetFillStyle(3001);
+    
+    zbosonBf->SetFillColorAlpha(kRed,0.35);
+    zbosonBf->SetFillStyle(3002);
+    zboson->SetFillColorAlpha(kBlue,0.35);
+    zboson->SetFillStyle(3001);
+    
+    JetMult->SetFillColorAlpha(kRed,0.35);
+    JetMult->SetFillStyle(3001);
+    JetPt->SetFillColorAlpha(kRed,0.35);
+    JetPt->SetFillStyle(3001);
+    JetEta->SetFillColorAlpha(kRed,0.35);
+    JetEta->SetFillStyle(3001);
+    nPV->SetFillColorAlpha(kRed,0.35);
+    nPV->SetFillStyle(3001);
+    nMET->SetFillColorAlpha(kRed,0.35);
+    nMET->SetFillStyle(3001);
+    MSV->SetFillColorAlpha(kRed,0.35);
+    MSV->SetFillStyle(3001);
+    
+    HFJetMult->SetFillColorAlpha(kRed,0.35);
+    HFJetMult->SetFillStyle(3001);
+    HFJetPt->SetFillColorAlpha(kRed,0.35);
+    HFJetPt->SetFillStyle(3001);
+    HFJetEta->SetFillColorAlpha(kRed,0.35);
+    HFJetEta->SetFillStyle(3001);
+    MSV->SetFillColorAlpha(kRed,0.35);
+    MSV->SetFillStyle(3001);
     
     
     fileout.open("dataset_lists.txt");
@@ -34,48 +161,7 @@ void CountEvents_Data(){
         
         gStyle->SetPalette(kOcean);
         
-        const static int maxNumJets  = 130;
-        
-        const static int maxNumElecs = 100;
-        
-        int   m_nLeps;
-        float m_lep_pt    [maxNumElecs];
-        float m_lep_eta   [maxNumElecs];
-        float m_lep_phi   [maxNumElecs];
-        int   m_lep_charge[maxNumElecs];
-        float m_lep_iso   [maxNumElecs];
-        
-        int m_nJets;
-        float m_Vtype ;
-        float m_Z_mass, m_Z_pt, m_Z_eta, m_Z_phi;
-        float m_jet_pt[maxNumJets], m_jet_eta[maxNumJets], m_jet_phi[maxNumJets], m_jet_msv[maxNumJets];
-        float m_jet_csv[maxNumJets];
-        float m_jet_vtxCat_IVF[maxNumJets];
-        float m_jet_msv_new[maxNumJets];
-        float m_jet_msv_inc[maxNumJets];
-        float m_jet_vtxMassCorr_IVF[maxNumJets];
-        
-        float m_MET_et;
-        float m_MET_phi;
-        float m_MET_sumet;
-        
-        int m_event;
-        float m_nPVs;
-        unsigned int m_run;
-        unsigned int m_lumi;
-        
-        std::map<TString, std::map<TString, std::vector<bool> > > HFJets   ;
-        std::map<TString, std::map<TString,              bool > > hasHFJets;
-        std::map<TString, std::map<TString,               int > > leadHFJet;
-        
-        const vector<TString> HFTags = {"NoHF", "CSVL", "CSVM", "CSVT", "CSVS"};
-        const vector<TString> SVType = {"noSV", "pfSV", "pfISV", "cISV", "cISVf", "cISVp"};
-        
-        std::map<TString, float*> SVVariable;
-        std::map<TString, float > SVMinimumVal;
-        std::map<TString, float*> HFTagDiscrimVar;
-        std::map<TString, float > HFTagDiscrimOP ;
-        
+        //values were declaired here
         
         TTreeReader myReader("EventTree", f);
         TTree *tree = (TTree*)f->Get("tree");
@@ -144,106 +230,12 @@ void CountEvents_Data(){
         SVMinimumVal["cISVf"] = 0.0 ;
         SVMinimumVal["cISVp"] = 0.0 ;
         
-        
-        TCanvas *c1 = new TCanvas("c1","multipad1",1000,600);
-        TCanvas *c2 = new TCanvas("c2","multipad2",1000,600);
-        TCanvas *c3 = new TCanvas("c3","multipad3",1000,600);
-        TCanvas *c4 = new TCanvas("c4","multipad4",1000,600);
-        gStyle->SetOptStat(1);
-        c1->Divide(2,2,0.02,0.02);
-        c2->Divide(2,1,0.02,0.02);
-        c3->Divide(3,2,0.02,0.02);
-        c4->Divide(2,2,0.02,0.02);
-        
-        //c1->SetLogy();
-        //c2->SetLogy();
-        
-        //create histogram
-        /*
-         THStack *ptBf           = new THStack("ptbf","pt distribution of muons (before cut)");
-         THStack *etaBf          = new THStack("etabf","#eta distribution of muons (before cut)");
-         THStack *pt             = new THStack("pt","pt distribution of muons");
-         THStack *eta            = new THStack("eta","#eta distribution of muons");
-         */
-        
-        TH1F *zbosonBf          = new TH1F("zmbf","Dilepton Mass (w/o Lepton cut)",100,0,300.);
-        TH1F *zboson            = new TH1F("zm","Dilepton Mass (w/ Lepton cut)",100,0,300.);
-        TH1F *nPV               = new TH1F("nPVs","Primary Vertices (Z+jet w/MET cut)",100,0,100.);
-        TH1F *MuonPtBf1         = new TH1F("muonPtbf1","Muon p_T (w/o cut)",100,0,300.);
-        TH1F *MuonEtaBf1        = new TH1F("muonEtabf1","Muon #eta (w/o cut)",100,-4,4);
-        TH1F *MuonPt1           = new TH1F("muonPt1","Muon p_T (Z+jet w/MET cut)",100,0,300.);
-        TH1F *MuonEta1          = new TH1F("muonEta1","Muon #eta (Z+jet w/MET cut)",100,-4,4);
-        TH1F *MuonPtBf2         = new TH1F("muonPtbf2","Muon p_T (w/o cut)",100,0,300.);
-        TH1F *MuonEtaBf2        = new TH1F("muonEtabf2","Muon #eta (w/o cut)",100,-4,4);
-        TH1F *MuonPt2           = new TH1F("muonPt2","Muon p_T (Z+jet w/MET cut)",100,0,300.);
-        TH1F *MuonEta2          = new TH1F("muonEta2","Muon #eta (Z+jet w/MET cut)",100,-4,4);
-        TH1F *JetMult           = new TH1F("jetMult","Jet Multiplicity (Valid Z-boson)",10,0,10.);
-        TH1F *JetPt             = new TH1F("jetPt","Jet p_T (Z+jet w/MET cut)",100,0,200.);
-        TH1F *JetEta            = new TH1F("jetEta","Jet #eta (Z+jet w/MET cut)",100,-4,4);
-        TH1F *nMET				= new TH1F("nmet","MET (Valid Z-boson)",100,0,200.);
-        TH1F *MSV				= new TH1F("msv","M_{SV} (Z+jet w/MET cut)",100,0,20.);
-        
-        TH1F *DY_Pt             = new TH1F("DYPt","pt distribution of DY process",100,0,300.);
-        TH1F *DY_Eta            = new TH1F("DYEta","#eta distribution of DY process",100,-4,4);
-        
-        TH1F *HFJetMult         = new TH1F("hfjetMult","HF-Tagged Jet Multiplicity (Z+HF w/ MET cut) (CSVM,cISV)",10,0,10.);
-        TH1F *HFJetPt           = new TH1F("hfjetPt","Lead HF-Tagged Jet p_T (Z+HF w/ MET cut) (CSVM,cISV)",100,0,200.);
-        TH1F *HFJetEta          = new TH1F("hfjetEta","Lead HF-Tagged Jet #eta (Z+HF w/ MET cut) (CSVM,cISV)",100,-4,4);
-        TH1F *HFMSV             = new TH1F("hfmsv","Lead HF-Tagged Jet M_SV (pfIncSecVtx) (Z+HF w/ MET cut) (CSVM,cISV)",100,0,20.);
-        
-        //setting color scheme
-        MuonPtBf1->SetFillColorAlpha(kRed,0.35);
-        MuonPtBf1->SetFillStyle(3002);
-        MuonPtBf2->SetFillColorAlpha(kBlue,0.35);
-        MuonPtBf2->SetFillStyle(3001);
-        
-        MuonEtaBf1->SetFillColorAlpha(kRed,0.35);
-        MuonEtaBf1->SetFillStyle(3002);
-        MuonEtaBf2->SetFillColorAlpha(kBlue,0.35);
-        MuonEtaBf2->SetFillStyle(3001);
-        
-        MuonPt1->SetFillColorAlpha(kRed,0.35);
-        MuonPt1->SetFillStyle(3002);
-        MuonPt2->SetFillColorAlpha(kBlue,0.35);
-        MuonPt2->SetFillStyle(3001);
-        
-        MuonEta1->SetFillColorAlpha(kRed,0.35);
-        MuonEta1->SetFillStyle(3002);
-        MuonEta2->SetFillColorAlpha(kBlue,0.35);
-        MuonEta2->SetFillStyle(3001);
-        
-        zbosonBf->SetFillColorAlpha(kRed,0.35);
-        zbosonBf->SetFillStyle(3002);
-        zboson->SetFillColorAlpha(kBlue,0.35);
-        zboson->SetFillStyle(3001);
-        
-        JetMult->SetFillColorAlpha(kRed,0.35);
-        JetMult->SetFillStyle(3001);
-        JetPt->SetFillColorAlpha(kRed,0.35);
-        JetPt->SetFillStyle(3001);
-        JetEta->SetFillColorAlpha(kRed,0.35);
-        JetEta->SetFillStyle(3001);
-        nPV->SetFillColorAlpha(kRed,0.35);
-        nPV->SetFillStyle(3001);
-        nMET->SetFillColorAlpha(kRed,0.35);
-        nMET->SetFillStyle(3001);
-        MSV->SetFillColorAlpha(kRed,0.35);
-        MSV->SetFillStyle(3001);
-        
-        HFJetMult->SetFillColorAlpha(kRed,0.35);
-        HFJetMult->SetFillStyle(3001);
-        HFJetPt->SetFillColorAlpha(kRed,0.35);
-        HFJetPt->SetFillStyle(3001);
-        HFJetEta->SetFillColorAlpha(kRed,0.35);
-        HFJetEta->SetFillStyle(3001);
-        MSV->SetFillColorAlpha(kRed,0.35);
-        MSV->SetFillStyle(3001);
-        
+        //histograms were here
         
         std::cout << "Total Events: " << nEntry << std::endl;
         
         //loop over events
-        for(int iEntry=0; iEntry<1000 ;++iEntry)
+        for(int iEntry=0; iEntry<1 ;++iEntry)
         {
             tree->GetEntry(iEntry);
             
