@@ -30,8 +30,13 @@ void CountEvents_Data(){
     int m_nJets;
     float m_Vtype ;
     float m_Z_mass, m_Z_pt, m_Z_eta, m_Z_phi;
-    float m_jet_pt[maxNumJets], m_jet_eta[maxNumJets], m_jet_phi[maxNumJets], m_jet_msv[maxNumJets];;
-    
+    float m_jet_pt[maxNumJets], m_jet_eta[maxNumJets], m_jet_phi[maxNumJets], m_jet_msv[maxNumJets];
+    float m_jet_csv[maxNumJets];
+	float m_jet_vtxCat_IVF[maxNumJets];
+	float m_jet_msv_new[maxNumJets];
+	float m_jet_msv_inc[maxNumJets];
+	float m_jet_vtxMassCorr_IVF[maxNumJets];
+
     float m_MET_et;
     float m_MET_phi;
     float m_MET_sumet;
@@ -43,7 +48,15 @@ void CountEvents_Data(){
     
 	std::map<TString, std::map<TString, std::vector<bool> > > HFJets   ;
 	std::map<TString, std::map<TString,              bool > > hasHFJets;
+	std::map<TString, std::map<TString,               int > > leadHFJet;
 
+	const vector<TString> EventHandler::HFTags = {"NoHF", "CSVL", "CSVM", "CSVT", "CSVS"};
+	const vector<TString> EventHandler::SVType = {"noSV", "pfSV", "pfISV", "cISV", "cISVf", "cISVp"};
+
+    std::map<TString, float*> SVVariable;
+    std::map<TString, float > SVMinimumVal;
+    std::map<TString, float*> HFTagDiscrimVar;
+	std::map<TString, float > HFTagDiscrimOP ;
 
 
     TTreeReader myReader("EventTree", f);
@@ -69,6 +82,12 @@ void CountEvents_Data(){
     tree->SetBranchAddress( "Jet_phi"        ,  m_jet_phi     );
     tree->SetBranchAddress( "Vtype"          , &m_Vtype       );
     tree->SetBranchAddress( "Jet_vtxMass"    ,  m_jet_msv     );
+
+	tree->SetBranchAddress( "Jet_vtxCat_IVF"     , m_jet_vtxCat_IVF     );
+	tree->SetBranchAddress( "Jet_vtxMassCorr_IVF", m_jet_vtxMassCorr_IVF);
+	tree->SetBranchAddress( "Jet_btagCSV"    ,  m_jet_csv     );
+	tree->SetBranchAddress( "Jet_newVtxMass"     , m_jet_msv_new        );
+	tree->SetBranchAddress( "Jet_incVtxMass"     , m_jet_msv_inc        );
 
     tree->SetBranchAddress( "met_pt"     , &m_MET_et    );
     tree->SetBranchAddress( "met_phi"    , &m_MET_phi   );
@@ -222,6 +241,9 @@ void CountEvents_Data(){
                         MuonEta2->Fill(m_lep_eta[0]);
                     }
                     
+					//Jet analysis
+					vector<int> validJets;
+					validJets.clear();
                     for(int j=0; j<m_nJets; j++){
                         
                         if( m_jet_pt[j] < 30. || abs(m_jet_eta[j]) > 2.4) continue;
@@ -230,7 +252,29 @@ void CountEvents_Data(){
                         JetEta->Fill(m_jet_eta[j]);
                         MSV->Fill(m_jet_msv[j]);
 
+						int lowPtIndex = j;
+						for(int k=0; k<validJets.size(); k++)
+						{
+							if(m_jet_pt[validJets[k]]<m_jet_pt[lowPtIndex]) swap(validJets[k], lowPtIndex);
+						}
+						validJets.push_back(lowPtIndex);
+
                     }
+
+					for(auto& svType : SVType)
+						for(auto& hfTag : HFTags)
+							{	HFJets   [hfTag][svType] = vector<bool>(validJets.size(), false);
+								hasHFJets[hfTag][svType] = false;
+							}
+
+					for(int vJet_i=0, evt_i=0; vJet_i<validJets.size(); vJet_i++){
+						
+						evt_i = validJets[vJet_i];
+						
+
+
+
+					}
                     
                 }
             }
