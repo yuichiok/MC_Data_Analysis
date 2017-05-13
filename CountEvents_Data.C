@@ -360,10 +360,11 @@ void CountEvents_Data(){
             
         }
 
-		if(count_loop==3){
+		if(count_loop==1){
+				TCanvas *ctest = new TCanvas("test","testpad1",1000,600);
 				gPad->SetLogy();
 				HFJetPt->Draw("");
-				HFJetPt->Print("test.pdf");
+				ctest->Print("test.pdf");
 		}
 
 		count_loop++;
