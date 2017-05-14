@@ -36,7 +36,7 @@ void CountEvents_Data(){
     float m_MET_phi;
     float m_MET_sumet;
     
-    int m_event;
+    //int m_event;
     float m_nPVs;
     unsigned int m_run;
     unsigned int m_lumi;
@@ -74,7 +74,9 @@ void CountEvents_Data(){
      THStack *pt             = new THStack("pt","pt distribution of muons");
      THStack *eta            = new THStack("eta","#eta distribution of muons");
      */
-    
+	
+	TList* hList = new TList();
+	    
     TH1F *zbosonBf          = new TH1F("zmbf","Dilepton Mass (w/o Lepton cut)",100,0,300.);
     TH1F *zboson            = new TH1F("zm","Dilepton Mass (w/ Lepton cut)",100,0,300.);
     TH1F *nPV               = new TH1F("nPVs","Primary Vertices (Z+jet w/MET cut)",100,0,100.);
@@ -99,7 +101,30 @@ void CountEvents_Data(){
     TH1F *HFJetPt           = new TH1F("hfjetPt","Lead HF-Tagged Jet p_T (Z+HF w/ MET cut) (CSVM,cISV)",100,0,200.);
     TH1F *HFJetEta          = new TH1F("hfjetEta","Lead HF-Tagged Jet #eta (Z+HF w/ MET cut) (CSVM,cISV)",100,-4,4);
     TH1F *HFMSV             = new TH1F("hfmsv","Lead HF-Tagged Jet M_SV (pfIncSecVtx) (Z+HF w/ MET cut) (CSVM,cISV)",100,0,20.);
-    
+
+	hList->Add(zbosonBf);
+	hList->Add(zboson);
+	hList->Add(nPV);
+	hList->Add(MuonPtBf1);
+	hList->Add(MuonEtaBf1);
+	hList->Add(MuonPt1);
+	hList->Add(MuonEta1);
+	hList->Add(MuonPtBf2);
+	hList->Add(MuonEtaBf2);
+	hList->Add(MuonPt2);
+	hList->Add(MuonEta2);
+	hList->Add(JetMult);
+	hList->Add(JetPt);
+	hList->Add(JetEta);
+	hList->Add(nMET);
+	hList->Add(MSV);
+	hList->Add(DY_Pt);
+	hList->Add(DY_Eta);
+	hList->Add(HFJetMult);
+	hList->Add(HFJetPt);
+	hList->Add(HFJetEta);
+	hList->Add(HFMSV);
+
     //setting color scheme
     MuonPtBf1->SetFillColorAlpha(kRed,0.35);
     MuonPtBf1->SetFillStyle(3002);
@@ -148,7 +173,7 @@ void CountEvents_Data(){
     MSV->SetFillColorAlpha(kRed,0.35);
     MSV->SetFillStyle(3001);
     
-    
+    TFile myfile("Analysis.root","RECREATE");
     fileout.open("dataset_lists.txt");
     
 	int count_loop = 0;
@@ -200,7 +225,7 @@ void CountEvents_Data(){
         tree->SetBranchAddress( "met_phi"    , &m_MET_phi   );
         tree->SetBranchAddress( "met_sumEt"  , &m_MET_sumet );
         
-        tree->SetBranchAddress( "evt" , &m_event);
+        //tree->SetBranchAddress( "evt" , &m_event);
         tree->SetBranchAddress( "nPVs", &m_nPVs );
         tree->SetBranchAddress( "run" , &m_run  );
         tree->SetBranchAddress( "lumi", &m_lumi );
@@ -242,8 +267,8 @@ void CountEvents_Data(){
         {
             tree->GetEntry(iEntry);
             
-            //if(iEntry%1000 == 0) std::cout << "Event: " << iEntry << std::endl;
-            
+            if(nEntry%2==0 && nEntry!=0 && iEntry==nEntry/2) std::cout << "Half way through! " << std::endl;
+			if(nEntry%2==1 && nEntry!=0 && iEntry==(nEntry+1)/2) std::cout << "Half way through! " << std::endl;
             
             if(m_Vtype == 0 || m_nLeps == 2)
             {
@@ -346,6 +371,9 @@ void CountEvents_Data(){
                             if(HFJets["CSVM"]["cISV"][vJet_i]){
                                 HFJetMult->Fill(validJets.size());
                             }
+
+							if( m_jet_pt[leadHFJet["CSVM"]["cISV"]] < 30. || abs(m_jet_eta[leadHFJet["CSVM"]["cISV"]]) > 2.4) continue;
+
                             if(hasHFJets["CSVM"]["cISV"]){
                                 HFJetPt->Fill(m_jet_pt[leadHFJet["CSVM"]["cISV"]]);
                                 HFJetEta->Fill(m_jet_eta[leadHFJet["CSVM"]["cISV"]]);
@@ -366,6 +394,9 @@ void CountEvents_Data(){
 				HFJetPt->Draw("");
 				ctest->Print("test.pdf");
 		}
+
+		myfile.cd();
+		hList->Write();
 
 		count_loop++;
 
