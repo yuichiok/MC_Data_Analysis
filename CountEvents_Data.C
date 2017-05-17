@@ -241,7 +241,7 @@ void CountEvents_Data(){
         HFTagDiscrimOP ["CSVT"] = 0.90;
         HFTagDiscrimOP ["CSVS"] = 0.90;
         
-        SVVariable["noSV" ] = m_jet_msv             ;
+        SVVariable["noSV" ] = m_jet_vtxMassCorr_IVF             ;
         //SVVariable["oldSV"] = m_jet_msv             ;
         SVVariable["pfSV" ] = m_jet_msv_new         ;
         SVVariable["pfISV"] = m_jet_msv_inc         ;
@@ -295,7 +295,7 @@ void CountEvents_Data(){
                     MuonEtaBf2->Fill(m_lep_eta[0]);
                 }
                 
-                if( m_Z_mass>70. && m_Z_mass<110. ) Zmass_Check = true;
+                if( m_Z_mass>=70. && m_Z_mass<=110. ) Zmass_Check = true;
                 if( m_MET_et<=40. ) MET_Check = true;
                 if( m_lep_pt[0] > 20 && abs(m_lep_eta[0]) < 2.4 && m_lep_iso[0] < 0.25) Lep0_Check = true;
                 if( m_lep_pt[1] > 20 && abs(m_lep_eta[1]) < 2.4 && m_lep_iso[1] < 0.25) Lep1_Check = true;
@@ -331,7 +331,7 @@ void CountEvents_Data(){
                             
                             JetPt->Fill(m_jet_pt[j]);
                             JetEta->Fill(m_jet_eta[j]);
-                            MSV->Fill(m_jet_msv[j]);
+                            MSV->Fill(m_jet_vtxMassCorr_IVF[j]);
                             
                             int lowPtIndex = j;
                             for(int k=0; k<validJets.size(); k++)
@@ -377,7 +377,7 @@ void CountEvents_Data(){
                             if(hasHFJets["CSVM"]["cISV"]){
                                 HFJetPt->Fill(m_jet_pt[leadHFJet["CSVM"]["cISV"]]);
                                 HFJetEta->Fill(m_jet_eta[leadHFJet["CSVM"]["cISV"]]);
-                                HFMSV->Fill(m_jet_msv[leadHFJet["CSVM"]["cISV"]]);
+                                HFMSV->Fill(m_jet_vtxMassCorr_IVF[leadHFJet["CSVM"]["cISV"]]);
                             }
                             
                         }
